@@ -11,30 +11,32 @@
 
 @implementation TableViewController
 
+@synthesize searchField;
 @synthesize appDelegate;
 @synthesize tableView;
 
 - (id)init {
     self = [super init];
     if (self) {
-        items = [[NSMutableArray alloc] init];
+        allItems = [[NSMutableArray alloc] init];
         NSArray* paths = [[NSBundle mainBundle] pathsForResourcesOfType:@"jpg" inDirectory:nil];
         for (NSString* filename in paths) {
             NSString* path = [[filename lastPathComponent] stringByDeletingPathExtension];
             NSString* name = [path stringByReplacingOccurrencesOfString:@"-" withString:@" "];
             path = [[NSBundle mainBundle] pathForImageResource:path];
-            [items addObject:[[Template alloc] initWithName:name path:path]];
+            [allItems addObject:[[Template alloc] initWithName:name path:path]];
+            filteredItems = allItems.copy;
         }
     }
     return self;
 }
 
 - (NSInteger)numberOfRowsInTableView:(NSTableView *)tableView {
-    return [items count];
+    return [filteredItems count];
 }
 
 - (id)tableView:(NSTableView *)tableView objectValueForTableColumn:(NSTableColumn *)tableColumn row:(NSInteger)row {
-    Template* template = [items objectAtIndex:row];
+    Template* template = [filteredItems objectAtIndex:row];
     NSString* identifier = [tableColumn identifier];
     return [template valueForKey:identifier];
 }
@@ -42,9 +44,20 @@
 - (void)tableViewSelectionDidChange:(NSNotification *)notification {
     NSInteger row = [tableView selectedRow];
     if (row >= 0) {
-        Template* template = [items objectAtIndex:row];
+        Template* template = [filteredItems objectAtIndex:row];
         [appDelegate setPath:[template path]];
     }
+}
+
+- (IBAction)updateFilter:(id)sender {
+    NSString *filter = [self.searchField stringValue];
+    if (filter.length > 0) {
+        NSPredicate *filterPredicate = [NSPredicate predicateWithFormat:@"self.name CONTAINS[cd] %@", filter];
+        filteredItems = [[allItems filteredArrayUsingPredicate:filterPredicate] mutableCopy];
+    } else {
+        filteredItems = allItems.copy;
+    }
+    [self.tableView reloadData];
 }
 
 @end

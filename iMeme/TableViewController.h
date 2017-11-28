@@ -10,11 +10,14 @@
 #import "AppDelegate.h"
 
 @interface TableViewController : NSObject <NSTableViewDataSource, NSTableViewDelegate> {
-    NSMutableArray* items;
+    NSMutableArray* allItems;
+    NSArray* filteredItems;
     AppDelegate* appDelegate;
     NSTableView* tableView;
+    NSSearchField *searchField;
 }
 
+@property (assign) IBOutlet NSSearchField *searchField;
 @property (assign) IBOutlet AppDelegate* appDelegate;
 @property (assign) IBOutlet NSTableView* tableView;
 
