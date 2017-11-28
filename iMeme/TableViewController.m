@@ -25,8 +25,8 @@
             NSString* name = [path stringByReplacingOccurrencesOfString:@"-" withString:@" "];
             path = [[NSBundle mainBundle] pathForImageResource:path];
             [allItems addObject:[[Template alloc] initWithName:name path:path]];
-            filteredItems = allItems.copy;
         }
+        filteredItems = allItems.copy;
     }
     return self;
 }
