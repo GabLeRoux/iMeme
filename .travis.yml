@@ -5,3 +5,9 @@ language: objective-c
 
 xcode_project: iMeme.xcodeproj
 xcode_scheme: iMeme
+
+# https://stackoverflow.com/questions/41786984/error-unexpected-action-build-when-building-a-project-with-swift-3-and-cocoa
+# prevents 'ERROR: Unexpected action: build'
+script:
+    - xcodebuild clean build -sdk iphonesimulator -workspace Project.xcworkspace -scheme ProjectTests CODE_SIGNING_REQUIRED=NO
+
